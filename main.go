@@ -12,10 +12,18 @@ var rdb *redis.Client
 var ctx = context.Background()
 
 func init() {
-    redisAddr := os.Getenv("REDIS_ADDR")
-    if redisAddr == "" {
-        redisAddr = "localhost:6379" // Default value
+    redisHost := os.Getenv("REDIS_HOST") // Get the REDIS_HOST from environment
+    redisPort := os.Getenv("REDIS_PORT") // Get the REDIS_PORT from environment
+
+    // Set default values if not set
+    if redisHost == "" {
+        redisHost = "localhost" // Default to localhost if not provided
     }
+    if redisPort == "" {
+        redisPort = "6379" // Default to port 6379 if not provided
+    }
+
+    redisAddr := fmt.Sprintf("%s:%s", redisHost, redisPort)
 
     rdb = redis.NewClient(&redis.Options{
         Addr: redisAddr, // Redis server address
